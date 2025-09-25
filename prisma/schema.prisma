@@ -24,7 +24,7 @@ enum Role {
   USER
 }
 
-model info {
+model Info {
   id   Int    @id @default(autoincrement())
   desc String @db.VarChar(80)
   type Type   @default(NEWS)
