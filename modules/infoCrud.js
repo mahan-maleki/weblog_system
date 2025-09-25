@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 
 router.get("/info", async (req, res) => {
     const showInfos = res.locals.prisma.info.findMany();
+
+    res.json(showInfos)
 })
 
 export default router
