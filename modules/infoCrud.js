@@ -5,19 +5,11 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 router.get('/info', async (req, res) => {
-    try {
-        const items = await prisma.info.findMany();
-        let html = '<h1>Info Table</h1><ul>';
+    const showInfos = await prisma.info.findMany();
 
-        items.forEach(item => {
-            html += `<li><strong>ID:</strong> ${item.id} | <strong>Desc:</strong> ${item.desc} | <strong>Type:</strong> ${item.type}</li>`;
-        });
-
-        html += '</ul>';
-        res.send(html);
-    } catch (error) {
-        res.status(500).send(`<h2 style="color:red;">Error fetching info: ${error.message}</h2>`);
-    }
+    res.json(showInfos);
 });
+
+
 
 export default router;
