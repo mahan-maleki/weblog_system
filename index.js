@@ -1,10 +1,13 @@
 import express from "express";
 import useDb from "./middlewares/useDbMiddleware.js"
+import infoCrud from "./modules/infoCrud.js"
 
 const app = express();
 const port = 3000;
 
 app.use(useDb)
+
+app.use(infoCrud)
 
 app.get("/", (req, res) => {
     res.send("Welcome to my App !")
