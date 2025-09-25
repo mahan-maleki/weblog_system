@@ -12,3 +12,30 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Type {
+  NEWS
+  JOKE
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  USER
+}
+
+model info {
+  id   Int    @id @default(autoincrement())
+  desc String @db.VarChar(80)
+  type Type   @default(NEWS)
+}
+
+model User {
+  userId   Int    @id @default(autoincrement())
+  username String @db.VarChar(20)
+  fname    String @db.VarChar(20)
+  lname    String @db.VarChar(20)
+  email    String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
+  role     Role   @default(USER)
+}
