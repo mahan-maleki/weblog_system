@@ -5,6 +5,8 @@ import infoCrud from "./modules/infoCrud.js"
 const app = express();
 const port = 3000;
 
+app.use(express.json())
+
 app.use(useDb)
 
 app.use(infoCrud)
