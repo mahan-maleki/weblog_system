@@ -4,12 +4,12 @@ import { PrismaClient } from "@prisma/client";
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get('/login', async (req, res) => {
+router.get('/users', async (req, res) => {
     const showUsers = await prisma.user.findMany();
     res.json(showUsers)
 })
 
-router.post('/login', async (req, res) => {
+router.post('/users', async (req, res) => {
     const { username, fname, lname, email, password, role } = req.body;
 
     try {
