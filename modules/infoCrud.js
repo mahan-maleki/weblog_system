@@ -66,4 +66,21 @@ router.put('/info', async (req, res) => {
     }
 })
 
+router.delete('/info/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await prisma.info.delete({
+            where: {
+                id: parseInt(id)
+            }
+        })
+
+        const showInfos = await prisma.info.findMany();
+        res.json(showInfos);
+    } catch (error) {
+        res.status(500).send(`Server Error: ${error.message}`);
+    }
+})
+
 export default router;
