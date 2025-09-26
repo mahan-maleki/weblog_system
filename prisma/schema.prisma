@@ -32,7 +32,7 @@ model Info {
 
 model User {
   userId   Int    @id @default(autoincrement())
-  username String @db.VarChar(20)
+  username String @unique @db.VarChar(20)
   fname    String @db.VarChar(20)
   lname    String @db.VarChar(20)
   email    String @unique @db.VarChar(255)
