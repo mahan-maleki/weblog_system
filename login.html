@@ -9,8 +9,31 @@
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
-<body>
-
+<body class="bg-body-secondary font-">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 mx-auto mt-5 p-4 bg-white shadow-lg">
+                <form action="http://localhost:3000/login" method="get">
+                    <div class="col-12 mb-5">
+                        <h1>Login Page</h1>
+                    </div>
+                    <div class="col-12">
+                        <label for="username_input" class="mb-3 fs-5">Username</label><br>
+                        <input type="text" id="username_input" name="username"
+                            class="p-2 w-75 border border-2 border-secondary" placeholder="Enter You'r Username">
+                    </div>
+                    <div class="col-12 mt-4">
+                        <label for="password_input" class="mb-3 fs-5">Password</label><br>
+                        <input type="password" id="password_input" name="password"
+                            class="p-2 w-75 border border-2 border-secondary" placeholder="Enter You'r Password">
+                    </div>
+                    <div class="col-12 mt-5">
+                        <button class="px-5 py-2 border-0">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
