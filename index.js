@@ -5,6 +5,7 @@ import { dirname } from "node:path";
 import useDb from "./middlewares/useDbMiddleware.js"
 import infoCrud from "./modules/infoCrud.js"
 import userCrud from "./modules/userCrud.js"
+import login from "./modules/login.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,6 +20,8 @@ app.use(useDb)
 app.use(infoCrud)
 
 app.use(userCrud)
+
+app.use(login)
 
 app.get("/", (req, res) => {
     res.send("Welcome to my App !")
