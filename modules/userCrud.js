@@ -85,4 +85,25 @@ router.put('/users', async (req, res) => {
     }
 })
 
+router.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    id = parseInt(id)
+
+    try {
+        if (!id || id.length == 0) {
+            return res.status(400).send("Bad Request: 'userId' cannot be empty or whitespace.");
+        }
+
+        await prisma.user.delete({
+            where: { userId: id }
+        })
+
+        const showUsers = await prisma.user.findMany();
+        res.json(showUsers)
+    } catch (error) {
+        console.log(`[Error Message]: ${error}`)
+    }
+})
+
 export default router;
