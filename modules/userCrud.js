@@ -51,4 +51,38 @@ router.post('/users', async (req, res) => {
     }
 })
 
+router.put('/users', async (req, res) => {
+    const { userId, role, password } = req.body;
+
+    if (userId == undefined) {
+        return res.status(400).send("Bad Request: Please enter 'userId' value in request body.");
+    } else if (!userId) {
+        return res.status(400).send("Bad Request: 'userId' cannot be empty or whitespace.");
+    } else if (password == undefined) {
+        return res.status(400).send("Bad Request: Please enter 'password' value in request body.");
+    } else if (!password || password.trim() === "") {
+        return res.status(400).send("Bad Request: 'password' cannot be empty or whitespace.");
+    } else if (role == undefined) {
+        return res.status(400).send("Bad Request: Please enter 'role' value in request body.");
+    } else if (!role || role.trim() === "") {
+        return res.status(400).send("Bad Request: 'role' cannot be empty or whitespace.");
+    }
+
+    try {
+        await prisma.user.update({
+            where: {
+                userId: userId
+            }, data: {
+                password: password,
+                role: role
+            }
+        })
+
+        const showUsers = await prisma.user.findMany();
+        res.json(showUsers)
+    } catch (error) {
+        console.log(`[Error Message]: ${error}`)
+    }
+})
+
 export default router;
