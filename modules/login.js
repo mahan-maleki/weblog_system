@@ -14,7 +14,7 @@ router.get('/login', async (req, res) => {
     });
 
     if (findUsername.password == password) {
-        res.cookie('AUTH', findUsername.userId);
+        res.cookie('AUTH', findUsername.userId, { signed: true });
         res.send("Welcome back !")
     } else {
         res.send("Password is not correct")
