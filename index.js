@@ -6,6 +6,8 @@ import useDb from "./middlewares/useDbMiddleware.js"
 import infoCrud from "./modules/infoCrud.js"
 import userCrud from "./modules/userCrud.js"
 import login from "./modules/login.js"
+import cookieParser from "cookie-parser";
+import checkRoleMiddleware from "./middlewares/checkRoleMiddleware.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,6 +17,10 @@ const port = 3000;
 
 app.use(express.json())
 
+app.use(cookieParser('AUTH'))
+
+app.use(checkRoleMiddleware)
+
 app.use(useDb)
 
 app.use(infoCrud)
@@ -23,7 +29,7 @@ app.use(userCrud)
 
 app.use(login)
 
-app.get("/", (req, res) => {
+app.get("/", checkRoleMiddleware, (req, res) => {
     res.send("Welcome to my App !")
 })
 
