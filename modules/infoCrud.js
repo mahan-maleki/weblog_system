@@ -5,81 +5,145 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 router.get('/info', async (req, res) => {
-    const showInfos = await prisma.info.findMany();
+    const auth = req.authToken;
 
-    res.json(showInfos);
+    if (auth !== undefined) {
+        const findUserId = await prisma.user.findUnique({
+            where: {
+                userId: parseInt(auth)
+            }
+        })
+
+        if (findUserId.role === "ADMIN" || findUserId.role === "EDITOR" || findUserId.role === "USER") {
+            const showInfos = await prisma.info.findMany();
+
+            res.json(showInfos);
+        } else {
+            res.status(403).send("Forbidden: you'r role isn't admin and you can't see users list")
+        }
+    } else {
+        res.status(401).send("Unauthorized: Please login and try again !")
+    }
 });
 
 router.post('/info', async (req, res) => {
-    const { desc, type } = req.body;
+    const auth = req.authToken;
 
-    if (desc == undefined) {
-        return res.status(400).send("Bad Request: Please enter 'desc' value in request body.");
-    } else if (!desc || desc.trim() === "") {
-        return res.status(400).send("Bad Request: 'desc' cannot be empty or whitespace.");
-    }
+    if (auth !== undefined) {
+        const findUserId = await prisma.user.findUnique({
+            where: {
+                userId: parseInt(auth)
+            }
+        })
+
+        if (findUserId.role === "ADMIN") {
+            const { desc, type } = req.body;
+
+            if (desc == undefined) {
+                return res.status(400).send("Bad Request: Please enter 'desc' value in request body.");
+            } else if (!desc || desc.trim() === "") {
+                return res.status(400).send("Bad Request: 'desc' cannot be empty or whitespace.");
+            }
 
 
-    try {
-        await prisma.info.create({
-            data: { desc, type }
-        });
+            try {
+                await prisma.info.create({
+                    data: { desc, type }
+                });
 
-        const showInfos = await prisma.info.findMany();
-        res.json(showInfos);
-    } catch (error) {
-        res.status(500).send(`Server Error: ${error.message}`);
+                const showInfos = await prisma.info.findMany();
+                res.json(showInfos);
+            } catch (error) {
+                res.status(500).send(`Server Error: ${error.message}`);
+            }
+        } else {
+            res.status(403).send("Forbidden: you'r role isn't admin and you can't see users list")
+        }
+    } else {
+        res.status(401).send("Unauthorized: Please login and try again !")
     }
 });
 
 router.put('/info', async (req, res) => {
-    const { id, desc, type } = req.body;
+    const auth = req.authToken;
 
-    if (id == undefined) {
-        return res.status(400).send("Bad Request: Please enter 'id' value in request body.");
-    } else if (!id) {
-        return res.status(400).send("Bad Request: 'id' cannot be empty or whitespace.");
-    } else if (desc == undefined) {
-        return res.status(400).send("Bad Request: Please enter 'desc' value in request body.");
-    } else if (!desc || desc.trim() === "") {
-        return res.status(400).send("Bad Request: 'desc' cannot be empty or whitespace.");
-    } else if (type == undefined) {
-        return res.status(400).send("Bad Request: Please enter 'type' value in request body.");
-    } else if (!type || type.trim() === "") {
-        return res.status(400).send("Bad Request: 'type' cannot be empty or whitespace.");
-    }
-
-    try {
-        await prisma.info.update({
+    if (auth !== undefined) {
+        const findUserId = await prisma.user.findUnique({
             where: {
-                id: id
-            }, data: {
-                desc: desc,
-                type: type
+                userId: parseInt(auth)
             }
         })
 
-        const showInfos = await prisma.info.findMany();
-        res.json(showInfos);
-    } catch (error) {
-        res.status(500).send(`Server Error: ${error.message}`);
+        if (findUserId.role === "ADMIN" || findUserId.role === "EDITOR") {
+            const { id, desc, type } = req.body;
+
+            if (id == undefined) {
+                return res.status(400).send("Bad Request: Please enter 'id' value in request body.");
+            } else if (!id) {
+                return res.status(400).send("Bad Request: 'id' cannot be empty or whitespace.");
+            } else if (desc == undefined) {
+                return res.status(400).send("Bad Request: Please enter 'desc' value in request body.");
+            } else if (!desc || desc.trim() === "") {
+                return res.status(400).send("Bad Request: 'desc' cannot be empty or whitespace.");
+            } else if (type == undefined) {
+                return res.status(400).send("Bad Request: Please enter 'type' value in request body.");
+            } else if (!type || type.trim() === "") {
+                return res.status(400).send("Bad Request: 'type' cannot be empty or whitespace.");
+            }
+
+            try {
+                await prisma.info.update({
+                    where: {
+                        id: id
+                    }, data: {
+                        desc: desc,
+                        type: type
+                    }
+                })
+
+                const showInfos = await prisma.info.findMany();
+                res.json(showInfos);
+            } catch (error) {
+                res.status(500).send(`Server Error: ${error.message}`);
+            }
+        } else {
+            res.status(403).send("Forbidden: you'r role isn't admin and you can't see users list")
+        }
+    } else {
+        res.status(401).send("Unauthorized: Please login and try again !")
     }
 })
 
 router.delete('/info/:id', async (req, res) => {
-    const { id } = req.params;
+    const auth = req.authToken;
 
-    try {
-        await prisma.info.delete({
+    if (auth !== undefined) {
+        const findUserId = await prisma.user.findUnique({
             where: {
-                id: parseInt(id)
+                userId: parseInt(auth)
             }
         })
 
-        const showInfos = await prisma.info.findMany();
-        res.json(showInfos);
-    } catch (error) {
-        res.status(500).send(`Server Error: ${error.message}`);
+        if (findUserId.role === "ADMIN" || findUserId.role === "EDITOR") {
+            const { id } = req.params;
+
+            try {
+                await prisma.info.delete({
+                    where: {
+                        id: parseInt(id)
+                    }
+                })
+
+                const showInfos = await prisma.info.findMany();
+                res.json(showInfos);
+            } catch (error) {
+                res.status(500).send(`Server Error: ${error.message}`);
+            }
+        } else {
+            res.status(403).send("Forbidden: you'r role isn't admin and you can't see users list")
+        }
+    } else {
+        res.status(401).send("Unauthorized: Please login and try again !")
     }
 })
 
